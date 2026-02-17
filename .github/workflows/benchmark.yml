@@ -38,23 +38,33 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install maturin pandas polars
+          pip install maturin pandas polars matplotlib seaborn
           
       - name: Build and Install fast-uuid
         run: |
           maturin build --release --out dist
           pip install dist/*.whl
 
-      - name: Run Benchmark Script
+      - name: Run Benchmark (Generate JSON)
         run: |
-          # Run the script and pipe output to a file AND stdout
-          python benchmark.py | tee benchmark_results.txt
+          python benchmark.py
 
-      - name: Upload Results Artifact
+      - name: Visualize Results (Generate PNG)
+        run: |
+          python visualize.py
+
+      - name: Upload Chart Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: benchmark-results
-          path: benchmark_results.txt
+          name: benchmark-chart
+          path: benchmark_chart.png
+
+      - name: Upload JSON Results Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results-json
+          path: benchmark_results.json
+
 
       - name: Post PR Comment (if PR)
         if: github.event_name == 'pull_request' && github.event.inputs.comment != 'false'
