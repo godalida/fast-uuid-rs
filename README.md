@@ -1,3 +1,5 @@
+<div align="center">
+
 # fast-uuid-rs
 
 [![PyPI version](https://img.shields.io/pypi/v/fast-uuid-rs.svg)](https://pypi.org/project/fast-uuid-rs/)
@@ -6,6 +8,8 @@
 [![Downloads](https://pepy.tech/badge/fast-uuid-rs)](https://pepy.tech/project/fast-uuid-rs)
 
 **Blazing fast UUID v4 generation for Python, written in Rust.**
+
+</div>
 
 `fast-uuid-rs` drops in as a high-performance replacement for bulk UUID generation. It leverages Rust's `uuid` crate and `rayon` parallelism to generate millions of UUIDs per second—**up to 50x faster** than Python's standard library.
 
