@@ -1,0 +1,31 @@
+name: Benchmark
+
+on: [push, pull_request]
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+          
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          override: true
+
+      - name: Install Maturin
+        run: pip install maturin
+
+      - name: Build fast-uuid (Release)
+        run: maturin develop --release
+
+      - name: Run Benchmark
+        run: |
+          python benchmark.py

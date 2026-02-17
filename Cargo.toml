@@ -1,0 +1,15 @@
+[package]
+name = "fast-uuid"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "fast_uuid"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.20", features = ["extension-module"] }
+uuid = { version = "1.0", features = ["v4", "fast-rng", "macro-diagnostics"] }
+rayon = "1.8"
+
+
