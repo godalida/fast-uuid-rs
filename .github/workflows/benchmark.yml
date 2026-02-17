@@ -1,34 +1,72 @@
-name: Benchmark
+name: Benchmarks
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      comment:
+        description: "Post results as comment on PR?"
+        required: false
+        default: "true"
+        type: boolean
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   benchmark:
+    name: Run Benchmarks (Pandas & Polars)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.12'
-          
-      - name: Set up Rust
+
+      - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           profile: minimal
           override: true
 
-      - name: Install Maturin
-        run: pip install maturin
-
-      - name: Build and Install (Release)
+      - name: Install Dependencies
         run: |
-          # Build the wheel in release mode
+          pip install maturin pandas polars
+          
+      - name: Build and Install fast-uuid
+        run: |
           maturin build --release --out dist
-          # Install the built wheel directly
           pip install dist/*.whl
 
-      - name: Run Benchmark
-        run: python benchmark.py
+      - name: Run Benchmark Script
+        run: |
+          # Run the script and pipe output to a file AND stdout
+          python benchmark.py | tee benchmark_results.txt
+
+      - name: Upload Results Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          path: benchmark_results.txt
+
+      - name: Post PR Comment (if PR)
+        if: github.event_name == 'pull_request' && github.event.inputs.comment != 'false'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const results = fs.readFileSync('benchmark_results.txt', 'utf8');
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "## 🚀 Benchmark Results\n\n```\n" + results + "\n```"
+            })
