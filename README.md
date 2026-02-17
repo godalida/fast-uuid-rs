@@ -1,9 +1,9 @@
-# fast-uuid
+# fast-uuid-rs
 
-[![PyPI version](https://img.shields.io/pypi/v/fast-uuid.svg)](https://pypi.org/project/fast-uuid/)
-[![Python Versions](https://img.shields.io/pypi/pyversions/fast-uuid.svg)](https://pypi.org/project/fast-uuid/)
-[![License](https://img.shields.io/crates/l/fast-uuid.svg)](https://github.com/yourusername/fast-uuid)
-[![Downloads](https://pepy.tech/badge/fast-uuid)](https://pepy.tech/project/fast-uuid)
+[![PyPI version](https://img.shields.io/pypi/v/fast-uuid-rs.svg)](https://pypi.org/project/fast-uuid-rs/)
+[![Python Versions](https://img.shields.io/pypi/pyversions/fast-uuid-rs.svg)](https://pypi.org/project/fast-uuid-rs/)
+[![License](https://img.shields.io/crates/l/fast-uuid-rs.svg)](https://github.com/godalida/fast-uuid-rs)
+[![Downloads](https://pepy.tech/badge/fast-uuid-rs)](https://pepy.tech/project/fast-uuid-rs)
 
 **Blazing fast UUID v4 generation for Python, written in Rust.**
 
@@ -11,17 +11,22 @@
 
 ## 🚀 Benchmarks
 
-| Method | Count | Time | Speed |
-| :--- | :--- | :--- | :--- |
-| **Python** (`uuid.uuid4`) | 100,000 | 0.26s | ~380k / sec |
-| **fast-uuid** | 100,000 | **0.005s** | **~18.2M / sec** |
+**Real-world performance on 10,000,000 rows:**
 
-*> Benchmarked on MacBook Pro (M1 Max), Python 3.12.*
+| Framework | Method | Time (10M rows) | Rows / sec | Speedup |
+| :--- | :--- | :--- | :--- | :--- |
+| **Pandas** | Standard `uuid.uuid4()` | 37.97s | ~263k | 1x |
+| **Pandas** | **fast-uuid** | **1.25s** | **~8.0M** | **30x ⚡** |
+| | | | | |
+| **Polars** | Standard `.map_elements()` | 39.30s | ~254k | 1x |
+| **Polars** | **fast-uuid** | **1.31s** | **~7.7M** | **30x ⚡** |
+
+*> Benchmarks run on GitHub Actions (Ubuntu runner).*
 
 ## 📦 Installation
 
 ```bash
-pip install fast-uuid
+pip install fast-uuid-rs
 ```
 
 ## ⚡ Usage

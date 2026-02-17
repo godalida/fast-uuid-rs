@@ -40,7 +40,7 @@ jobs:
         run: |
           pip install maturin pandas polars matplotlib seaborn
           
-      - name: Build and Install fast-uuid
+      - name: Build and Install fast-uuid-rs
         run: |
           maturin build --release --out dist
           pip install dist/*.whl
